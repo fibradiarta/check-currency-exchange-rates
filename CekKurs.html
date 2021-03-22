@@ -23,14 +23,20 @@
                 <div class="row form-group">
                   <div class="col-md-6">
                     <h5>DARI</h5>
-                    <select id="dari" class="form-control"></select>
+                    <select id="dari" class="form-control">
+                      <option value="init" >--Select Curenncy--</option>
+                      <option value="EUR" >EUR</option>
+                    </select>
                   </div>
                   <div class="col-md-6">
                     <h5>KE</h5>
-                    <select id="ke" class="form-control"></select>
+                    <select id="ke" class="form-control">
+                      <option value="init" >--Select Curenncy--</option>
+                      <option value="EUR" >EUR</option>
+                    </select>
                   </div>
                 </div>
-				<br/>
+				        <br/>
                 <button id="btnCek" type="button" class="btn btn-primary btn-lg btn-block">CEK KURS SAAT INI</button>
               </form>
               <br/>
@@ -51,54 +57,37 @@
             
             //inisialisasi option dari dan ke
             var initDari = $('#dari');
-            var initKe = $('#ke');	
-            var myOptions = {
-                init: "--Select Curenncy--",
-                CAD : "CAD",
-                HKD : "HKD",
-                ISK : "ISK",
-                PHP : "PHP",
-                DKK : "DKK",
-                HUF : "HUF",
-                CZK :"CZK",
-                AUD : "AUD",
-                RON : "RON",
-                SEK : "SEK",
-                IDR : "IDR",
-                INR : "INR",
-                BRL : "BRL",
-                RUB : "RUB",
-                HRK : "HRK",
-                JPY : "JPY",
-                THB : "THB",
-                CHF : "CHF",
-                SGD : "SGD",
-                PLN : "PLN",
-                BGN : "BGN",
-                TRY : "TRY",
-                CNY : "CNY",
-                NOK : "NOK",
-                NZD : "NZD",
-                ZAR : "ZAR",
-                USD : "USD",
-                MXN : "MXN",
-                ILS : "ILS",
-                GBP : "GBP",
-                KRW : "KRW",
-            };
-
-             var dari = "";
-             var ke = "";
+            var initKe = $('#ke');
+            var dari = "";
+            var ke = "";
             
-            $.each(myOptions, function(val, text) {
-                initDari.append(
-                $('<option></option>').val(val).html(text)
-                );
-                
-                initKe.append(
-                $('<option></option>').val(val).html(text)
-                );
-            });
+            function InitBaseRates()
+            {
+              $.ajax({
+                    headers: { "Accept": "application/json"},
+                    type: 'GET',
+                    url: 'https://api.exchangeratesapi.io/latest',
+                    crossDomain: true,
+                    beforeSend: function(xhr){
+                        xhr.withCredentials = true;
+                    },
+                    success: function(data, textStatus, request){
+                        console.log(data.rates);
+
+                        $.each(data.rates, function(val, text) {
+                        initDari.append(
+                          $('<option></option>').val(val).html(val)
+                          );
+                          
+                          initKe.append(
+                          $('<option></option>').val(val).html(val)
+                          );
+                      });
+                    }
+                });
+            }
+
+            InitBaseRates();
 
             //clearAll
             function ClearAll()
